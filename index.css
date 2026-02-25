@@ -30,4 +30,5 @@ body { font-family: "Open Sans", sans-serif; }
 #io div label { width: 250px; display: inline-block }
 
 #outputs { display: flex; padding-top: 25px }
+#outputs > div { width: 150px; padding: 5px }
 .output-label { font-variant: small-caps; }

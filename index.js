@@ -52,6 +52,10 @@ import('https://webr.r-wasm.org/v0.5.8/webr.mjs').then(
 
         const speedmph = await webR.evalRNumber("round(min(results$speeds$approach_speed, results$speeds$circ_speed) / 1.609)")
         document.getElementById("speed-mph").textContent = "" + speedmph
+
+        const ratio = await webR.evalRNumber("round(results$path$swept_approach_radius / results$path$swept_island_radius, digits=2)")
+        document.getElementById("ratio").textContent = "" + ratio
+
         document.getElementById("calculating").style="display: none; visibility: hidden"
         document.getElementById("outputs").style = ""
     }
