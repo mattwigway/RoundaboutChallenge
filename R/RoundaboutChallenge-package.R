@@ -7,6 +7,7 @@
 #' @importFrom ggforce geom_arc
 #' @importFrom ggforce geom_circle
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 annotate
 #' @importFrom ggplot2 coord_fixed
 #' @importFrom ggplot2 element_rect
 #' @importFrom ggplot2 geom_path
