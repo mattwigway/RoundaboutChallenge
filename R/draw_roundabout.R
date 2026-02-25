@@ -8,7 +8,7 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
         radius = c(island_radius, approach_radius, approach_radius, approach_radius, approach_radius)
     )
 
-    entry_distance = corner_offset * 3
+    entry_distance = 75
 
     approaches = rbind(
         mutate(circles[2:nrow(circles),], type="approach"),
@@ -121,6 +121,8 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
         geom_arc(data=path_arcs, aes(x0=x, y0=y, r=r, start=start, end=end), linewidth = veh_width * lwscale, color=veh_color, lineend="round") +
         geom_segment(data=path_lines, aes(x=x, y=y, xend=xend, yend=yend), linewidth=veh_width * lwscale, color=veh_color) +
         coord_fixed(xlim=c(-entry_distance, entry_distance), ylim=c(-entry_distance, entry_distance)) +
+        annotate("segment", x=-70, y=-70, xend=-45, yend=-70, color="black", linewidth=6) +
+        annotate("text", x=-43, y=-70, label="25 m", hjust=0, size=10) +
         theme_void() +
         theme(plot.background=element_rect(fill="black")) +
         scale_x_continuous(expand=c(0, 0)) +
