@@ -86,28 +86,28 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
     ground = tribble(
         ~group, ~x, ~y,
         "nw", -entry_distance, entry_distance,
-        "nw", -road_width, entry_distance,
+        "nw", -min(road_width, corner_offset - approach_radius), entry_distance,
         "nw", -corner_offset + approach_radius, corner_offset,
         "nw", -corner_offset, corner_offset - approach_radius,
-        "nw", -entry_distance, road_width,
+        "nw", -entry_distance, min(road_width, corner_offset - approach_radius),
 
         "ne", entry_distance, entry_distance,
-        "ne", road_width, entry_distance,
+        "ne", min(road_width, corner_offset - approach_radius), entry_distance,
         "ne", corner_offset - approach_radius, corner_offset,
         "ne", corner_offset, corner_offset - approach_radius,
-        "ne", entry_distance, road_width,
+        "ne", entry_distance, min(road_width, corner_offset - approach_radius),
 
         "sw", -entry_distance, -entry_distance,
-        "sw", -road_width, -entry_distance,
+        "sw", -min(road_width, corner_offset - approach_radius), -entry_distance,
         "sw", -corner_offset + approach_radius, -corner_offset,
         "sw", -corner_offset, -corner_offset + approach_radius,
-        "sw", -entry_distance, -road_width,
+        "sw", -entry_distance, -min(road_width, corner_offset - approach_radius),
 
         "se", entry_distance, -entry_distance,
-        "se", road_width / 2, -entry_distance,
+        "se", min(road_width, corner_offset - approach_radius), -entry_distance,
         "se", corner_offset - approach_radius, -corner_offset,
         "se", corner_offset, -corner_offset + approach_radius,
-        "se", entry_distance, -road_width
+        "se", entry_distance, -min(road_width, corner_offset - approach_radius)
     )
 
     plot = ggplot() +
