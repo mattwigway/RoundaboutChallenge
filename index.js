@@ -19,8 +19,13 @@ import('https://webr.r-wasm.org/v0.5.8/webr.mjs').then(
         document.getElementById("calculating").style=""
 
         const icd = Number(document.getElementById("icd").value)
-        const island_prop = Number(document.getElementById("island-size").value) / 100
+        const island_pct = Number(document.getElementById("island-size").value)
+        const island_prop = island_pct / 100
         const approach_radius = Number(document.getElementById("approach-radius").value)
+
+        document.getElementById("icd-readout").textContent = "" + icd
+        document.getElementById("island-size-readout").textContent = "" + island_pct
+        document.getElementById("approach-radius-readout").textContent = "" + approach_radius
 
         const island_radius = icd / 2 * island_prop
         const roadway_width = icd / 2 - island_radius
