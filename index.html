@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Roundabout Challenge</title>
+        <script src="index.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div id="loading">Loading...<div class="spinner"></div></div>
+        <div id="app" style="display: none; visibility: hidden;">
+            <div id="display"></div>
+            <div class="inputs">
+                <div>
+                    <label for="icd">Inscribed circle diameter (meters)</label>
+                    <input type="range" min="10" max="65" id="icd" value="50">
+                </div>
+                <div>
+                    <label for="island-size">Island size (percent of diameter)</label>
+                    <input type="range" min="0" max="100" id="island-size" value="25">
+                </div>
+                <div>
+                    <label for="approach-radius">Approach radius (meters)</label>
+                    <input type="range" min="4" max="25" id="approach-radius" value="4">
+                </div>
+            </div>
+
+            <div class="outputs">
+                <div id="calculating">Calculating... <div class="spinner"></div></div>
+                <div>
+                    Vehicle speed
+                    <span id="speed-mph"></span> mph
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
