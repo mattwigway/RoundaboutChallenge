@@ -59,8 +59,8 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
 
     path_lines = tribble(
         ~x, ~y, ~xend, ~yend,
-        -entry_distance, -(veh_width + buffer) / 2, path$swept_approach_x, -(veh_width + buffer + splitter_width) / 2,
-        entry_distance, -(veh_width + buffer) / 2, -path$swept_approach_x, -(veh_width + buffer + splitter_width) / 2,
+        -entry_distance, -(veh_width + buffer + splitter_width) / 2, path$swept_approach_x, -(veh_width + buffer + splitter_width) / 2,
+        entry_distance, -(veh_width + buffer + splitter_width) / 2, -path$swept_approach_x, -(veh_width + buffer + splitter_width) / 2,
     )
 
     crosswalks = tribble(
@@ -120,7 +120,7 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
         geom_polygon(data = splitters, aes(x=x, y=y, group=dir), fill=land, color=land) +
         geom_arc(data=path_arcs, aes(x0=x, y0=y, r=r, start=start, end=end), linewidth = veh_width * lwscale, color=veh_color, lineend="round") +
         geom_segment(data=path_lines, aes(x=x, y=y, xend=xend, yend=yend), linewidth=veh_width * lwscale, color=veh_color) +
-        coord_fixed() +
+        coord_fixed(xlim=c(-entry_distance, entry_distance), ylim=c(-entry_distance, entry_distance)) +
         theme_void() +
         theme(plot.background=element_rect(fill="black")) +
         scale_x_continuous(expand=c(0, 0)) +
@@ -146,8 +146,17 @@ calc_path = function (island_radius, approach_radius, road_width, veh_width, buf
     # circle will place the vehicle as close as possible to the approach
     # radius, as that should also be on the fastest path.
 
+    # vehicle position entering curve
+    target_y = -(veh_width + buffer + splitter_width) / 2
+
     # radius to center of vehicle tangent point
     effective_island_radius = island_radius + buffer + veh_width / 2
+
+    # make sure they don't curve the wrong way
+    if (effective_island_radius <= abs(target_y) + 1) {
+        effective_island_radius = abs(target_y) + 1
+    }
+
     effective_approach_radius = approach_radius + buffer + veh_width / 2
 
     corner_offset = (island_radius + approach_radius + road_width) / sqrt(2)
@@ -168,6 +177,14 @@ calc_path = function (island_radius, approach_radius, road_width, veh_width, buf
 
     swept_island_angle = atan2(swept_island_y + corner_offset, corner_offset)
 
+    if (swept_island_radius < 0) {
+        # the approach curbs are non binding
+        swept_island_radius = 500
+        # assume five degrees deflection
+        swept_island_angle = 85 * pi / 180
+        swept_island_y = swept_island_radius - effective_island_radius
+    }
+
     # Now, swept approach radius/angle
     # figure out where it links up with other path
     transition_x = -swept_island_radius * cos(swept_island_angle)
@@ -176,8 +193,6 @@ calc_path = function (island_radius, approach_radius, road_width, veh_width, buf
     # NB having splitter width here is a hack as it puts the vehicle off-center in the
     # lane (offset by the splitter) while still traveling straight. But that's not
     # going to be very visually noticeable.
-    target_y = -(veh_width + buffer + splitter_width) / 2
-
     distance_to_x_axis_perpendicular_to_path_at_transition = abs((transition_y - target_y) / cos(pi / 2 - swept_island_angle))
 
     swept_approach_radius = abs(distance_to_x_axis_perpendicular_to_path_at_transition * cos(pi / 2 - swept_island_angle) /
@@ -187,6 +202,9 @@ calc_path = function (island_radius, approach_radius, road_width, veh_width, buf
     swept_approach_y = transition_y - swept_approach_radius * cos(pi / 2 - swept_island_angle)
 
     return(list(
+        effective_island_radius = effective_island_radius,
+        effective_approach_radius = effective_approach_radius,
+        corner_offset = corner_offset,
         swept_island_radius = swept_island_radius,
         swept_island_y = swept_island_y,
         swept_island_angle = pi / 2 - swept_island_angle,
