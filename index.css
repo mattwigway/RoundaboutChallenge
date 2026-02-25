@@ -1,13 +1,18 @@
 #display, #display img { width: 450px; height: 450px; display: block }
 
+body { font-family: "Open Sans", sans-serif; }
+
 /* The spinning element */
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3; /* Light gray border for the track */
-  border-top: 5px solid #3498db; /* Blue border for the spinning part */
+  width: 15px;
+  height: 15px;
+  border: 2px solid #f3f3f3; /* Light gray border for the track */
+  border-top: 2px solid #4b9cd3; /* Blue border for the spinning part */
   border-radius: 50%; /* Makes the div a circle */
   animation: spin 1s linear infinite; /* Applies the spin animation */
+  display: inline-block;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 /* Keyframes for the rotation animation */
@@ -19,3 +24,10 @@
     transform: rotate(360deg); /* End at 360 degrees */
   }
 }
+
+#app { display: flex }
+#io > div { padding-bottom: 15px }
+#io div label { width: 250px; display: inline-block }
+
+#outputs { display: flex; padding-top: 25px }
+.output-label { font-variant: small-caps; }

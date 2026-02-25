@@ -17,6 +17,7 @@ import('https://webr.r-wasm.org/v0.5.8/webr.mjs').then(
 
     async function update () {
         document.getElementById("calculating").style=""
+        document.getElementById("outputs").style="display: none; visibility: hidden"
 
         const icd = Number(document.getElementById("icd").value)
         const island_pct = Number(document.getElementById("island-size").value)
@@ -52,6 +53,7 @@ import('https://webr.r-wasm.org/v0.5.8/webr.mjs').then(
         const speedmph = await webR.evalRNumber("round(min(results$speeds$approach_speed, results$speeds$circ_speed) / 1.609)")
         document.getElementById("speed-mph").textContent = "" + speedmph
         document.getElementById("calculating").style="display: none; visibility: hidden"
+        document.getElementById("outputs").style = ""
     }
 
     document.getElementById("icd").addEventListener("change", update);
