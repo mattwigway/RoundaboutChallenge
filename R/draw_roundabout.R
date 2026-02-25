@@ -10,25 +10,6 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
 
     entry_distance = 75
 
-    approaches = rbind(
-        mutate(circles[2:nrow(circles),], type="approach"),
-        mutate(circles[2:nrow(circles),], type="exit")
-    ) |>
-    mutate(
-        xend = case_when(
-            # horizontal ones
-            type == "approach" & x < 0 & y < 0 | type == "exit" & x < 0 & y > 0 ~ -entry_distance,
-            type == "approach" & x > 0 & y > 0 | type == "exit" & x > 0 & y < 0 ~ entry_distance,
-            TRUE ~ sign(x) * (road_width + island_radius / 2)
-        ), 
-        yend = case_when(
-            # horizontal ones
-            type == "exit" & x > 0 & y > 0 | type == "approach" & x < 0 & y > 0 ~ entry_distance,
-            type == "exit" & x < 0 & y < 0 | type == "approach" & x > 0 & y < 0 ~ -entry_distance,
-            TRUE ~ sign(y) * (road_width + island_radius / 2)
-        )
-    )
-
     # splitters
     splitters = tribble(
         ~dir, ~x, ~y,
@@ -77,10 +58,15 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
     )
 
     # two parallel lines
-    crosswalks = rbind(
-        crosswalks |> mutate(x=x * (corner_offset - 4) / corner_offset, y=y * (corner_offset - 4) / corner_offset, which="inner"),
-        crosswalks |> mutate(which="outer")
-    )
+    inner = crosswalks
+    inner$x = inner$x * (corner_offset - 4) / corner_offset
+    inner$y = inner$y * (corner_offset - 4) / corner_offset
+    inner$which = "inner"
+
+    outer = crosswalks
+    outer$which = "outer"
+
+    crosswalks = rbind(inner, outer)
 
     # ground
     ground = tribble(
@@ -116,7 +102,6 @@ draw_roundabout = function (island_radius, approach_radius, road_width, veh_widt
         geom_polygon(data = ground, aes(x, y, group=group), color=land, fill=land) +
         # draw center island and approach radii
         geom_circle(data = circles, aes(x0=x, y0=y, r=radius), fill=land, color=land) +
-        #geom_segment(data = approaches, aes(x=x, y=y, xend=xend, yend=yend), color=land, linewidth=approach_radius * lwscale) +
         geom_polygon(data = splitters, aes(x=x, y=y, group=dir), fill=land, color=land) +
         geom_arc(data=path_arcs, aes(x0=x, y0=y, r=r, start=start, end=end), linewidth = veh_width * lwscale, color=veh_color, lineend="round") +
         geom_segment(data=path_lines, aes(x=x, y=y, xend=xend, yend=yend), linewidth=veh_width * lwscale, color=veh_color) +
