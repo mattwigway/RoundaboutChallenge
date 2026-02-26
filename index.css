@@ -1,6 +1,11 @@
 #display, #display img { width: 450px; height: 450px; display: block }
 
-body { font-family: "Open Sans", sans-serif; }
+body { 
+    font-family: "Open Sans", sans-serif;
+    max-width: 925px;    
+    margin-left: auto;
+    margin-right: auto; 
+}
 
 /* The spinning element */
 .spinner {
